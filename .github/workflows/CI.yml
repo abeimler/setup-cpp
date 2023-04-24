@@ -26,7 +26,7 @@ jobs:
         node:
           - 18 # build with the latest node lts, use for release
         pnpm:
-          - 8
+          - 7
         cache_reset_counter:
           - 0
     steps:
