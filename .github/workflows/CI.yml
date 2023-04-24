@@ -10,7 +10,6 @@ on:
       - "*"
 
 jobs:
-  
   Test:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
@@ -25,7 +24,7 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 18            # build with the latest node lts, use for release 
+          - 18            # build with the latest node lts, use for release
         pnpm:
           - 8
         cache_reset_counter:
@@ -107,7 +106,7 @@ jobs:
             ./exe/setup-cpp-x64-macos
             ./dist/node12/setup-cpp.js
             ./dist/node12/setup-cpp.js.map
-            ./dist/node12/                      # TODO: deprecate node12
+            ./dist/node12/                      
             ./dist/node16/
             ./dist/node18/
 
@@ -122,11 +121,15 @@ jobs:
         container:
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
-          # build with latest lts and run with older node version
+          # build with minimal node version
           - "ubuntu_node_12.dockerfile"
+          - "ubuntu_node_legacy.dockerfile"
+          # build and test with newest node version
           - "ubuntu_node_16.dockerfile"
           - "ubuntu_node_18.dockerfile"
-          - "ubuntu_node_legacy.dockerfile"
+          # build with latest node and run with older node version
+          - "ubuntu_node_18_12.dockerfile"
+          - "ubuntu_node_18_16.dockerfile"
         cache_reset_counter:
           - 0
     steps:
