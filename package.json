@@ -52,9 +52,9 @@
     "start.docker.fedora": "docker run -t setup-cpp:fedora .",
     "start.docker.ubuntu": "docker run -t setup-cpp:ubuntu .",
     "test": "run-p --continue-on-error test.lint test.unit",
-    "test.docker.arch": "docker build -f ./dev/docker/arch_node.dockerfile --target setup-cpp -t setup-cpp:arch-base . && container-structure-test test --image setup-cpp:arch-base --config ./dev/container-tests/arch.yml",
-    "test.docker.fedora": "docker build -f ./dev/docker/fedora_node.dockerfile --target setup-cpp -t setup-cpp:fedora-base . && container-structure-test test --image setup-cpp:fedora-base --config ./dev/container-tests/fedora.yml",
-    "test.docker.ubuntu": "docker build -f ./dev/docker/ubuntu_node.dockerfile --target setup-cpp -t setup-cpp:ubuntu-base . && container-structure-test test --image setup-cpp:ubuntu-base --config ./dev/container-tests/ubuntu.yml",
+    "test.docker.arch": "docker build -f ./dev/docker/arch_node.dockerfile --target setup-cpp -t setup-cpp:arch . && container-structure-test test --image setup-cpp:arch --config ./dev/container-tests/arch.yml",
+    "test.docker.fedora": "docker build -f ./dev/docker/fedora_node.dockerfile --target setup-cpp -t setup-cpp:fedora . && container-structure-test test --image setup-cpp:fedora --config ./dev/container-tests/fedora.yml",
+    "test.docker.ubuntu": "docker build -f ./dev/docker/ubuntu_node.dockerfile --target setup-cpp -t setup-cpp:ubuntu . && container-structure-test test --image setup-cpp:ubuntu --config ./dev/container-tests/ubuntu.yml",
     "test.lint": "run-p --aggregate-output --continue-on-error lint.cspell test.lint.eslint test.lint.prettier lint.tsc",
     "test.lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/",
     "test.lint.prettier": "prettier . --check",
@@ -122,9 +122,6 @@
     "user-access": "workspace:*",
     "which": "^3.0.0"
   },
-  "engines": {
-    "node": ">=12.x"
-  },
   "keywords": [
     "github-actions",
     "actions",
@@ -147,6 +144,9 @@
   "alias": {
     "electron": false,
     "patha": "patha/dist/index.node.mjs"
+  },
+  "engines": {
+    "node": ">=12.x"
   },
   "main": "./dist/node16/setup-cpp.js",
   "main.legacy": "./dist/node12/setup-cpp.js",

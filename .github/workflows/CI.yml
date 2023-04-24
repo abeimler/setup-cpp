@@ -30,13 +30,13 @@ jobs:
           - 16
           - 18
         include:
-          - node: 12
+          - node: 12    # test minimal engine build with node 12
             pnpm: 6
-            skip_test: true
-          - node: 16
+          - node: 16    
             pnpm: 7
-          - node: 18
+          - node: 18    # latest lts version, use for release
             pnpm: 8
+            release: true
     steps:
       - uses: actions/checkout@v3
         with:
@@ -74,14 +74,17 @@ jobs:
         run: |
           pnpm run test
 
+  Package:
+    needs: Test
+    if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.release && (contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12')) }}
+    runs-on: ${{ matrix.os }}
+    steps:
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
-        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
         run: |
           pnpm run pack.exe
 
       - name: Upload Artifacts
-        if: ${{ (startsWith(github.ref, 'refs/tags/')) && contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}
         uses: actions/upload-artifact@v3
         with:
           path: |
@@ -90,8 +93,8 @@ jobs:
           retention-days: 1
 
   Release:
-    needs: Test
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: Package
+    if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.release }}
     runs-on: ubuntu-22.04
     steps:
       - name: Download Artifacts
