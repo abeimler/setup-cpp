@@ -24,7 +24,7 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 18            # build with the latest node lts, use for release
+          - 18 # build with the latest node lts, use for release
         pnpm:
           - 8
         cache_reset_counter:
