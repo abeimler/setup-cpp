@@ -34,9 +34,8 @@ jobs:
             pnpm: 6
           - node: 16    
             pnpm: 7
-          - node: 18    # latest lts version, use for release
+          - node: 18
             pnpm: 8
-            release: true
     steps:
       - uses: actions/checkout@v3
         with:
@@ -76,9 +75,53 @@ jobs:
 
   Package:
     needs: Test
-    if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.release && (contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12')) }}
+    if: "${{ startsWith(github.ref, 'refs/tags/') }}"
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2022
+          - ubuntu-22.04
+          - macos-12
+        cache_reset_counter:
+          - 0
+        node:
+          - 18   # latest lts version, use for release
+        pnpm:
+          - 8
     steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+          key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-cache-OS:${{ matrix.os }}-"
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: Install and build
+        run: |
+          pnpm install
+
+      # - name: Setup SSH debugging session
+      #   uses: mxschmitt/action-tmate@v3
+      
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
         run: |
@@ -94,7 +137,7 @@ jobs:
 
   Release:
     needs: Package
-    if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.release }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-22.04
     steps:
       - name: Download Artifacts
@@ -132,8 +175,9 @@ jobs:
         container:
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
-          - "ubuntu_20.04_node_legacy.dockerfile"
-          - "ubuntu_20.04_node.dockerfile"
+          - "ubuntu_node_12.dockerfile"
+          - "ubuntu_node_16.dockerfile"
+          - "ubuntu_node_18.dockerfile"
           - "ubuntu_node_legacy.dockerfile"
           - "ubuntu_node.dockerfile"
         cache_reset_counter:
