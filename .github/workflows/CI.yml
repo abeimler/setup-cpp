@@ -81,6 +81,22 @@ jobs:
             ./dist
           retention-days: 1
 
+      - name: Setup Node 12
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+      - name: Smoke Test Node 12
+        run: |
+          node ./dist/node12/setup-cpp.js --help
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Smoke Test Node 16
+        run: |
+          node ./dist/node16/setup-cpp.js --help
+
   Release:
     needs: Test
     if: startsWith(github.ref, 'refs/tags/')
@@ -143,7 +159,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
+          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
 
