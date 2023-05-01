@@ -24,9 +24,9 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 18 # build with the latest node lts, use for release
+          - 18                  # build with the latest node lts version, use for release
         pnpm:
-          - 7
+          - 8
         cache_reset_counter:
           - 0
     steps:
@@ -140,7 +140,7 @@ jobs:
           # build with minimal node version
           - "ubuntu_node_12.dockerfile"
           - "ubuntu_node_legacy.dockerfile"
-          # build and test with newest node version
+          # build and test with newest node version (see Test)
           - "ubuntu_node_16.dockerfile"
           - "ubuntu_node_18.dockerfile"
           # build with latest node and run with older node version

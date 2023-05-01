@@ -35,10 +35,6 @@ COPY . .
 ## WARN  "prepare" script of "setup-cpp" inside "/workspace" is skipped as the working directory seems suspicious. To run this lifecycle script anyway, use "--unsafe-perm".
 RUN pnpm install --unsafe-perm
 
-#### Testing
-FROM builder AS tester
-RUN pnpm run test
-
 
 #### setup-cpp
 FROM base AS setup-cpp

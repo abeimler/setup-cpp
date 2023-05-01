@@ -48,7 +48,7 @@ RUN chmod +x /tmp/nvm_install.sh && /tmp/nvm_install.sh \
 ENV NODE_PATH $NVM_DIR/v${node_version}/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v${node_version}/bin:$PATH
 # add setup-cpp.js
-COPY --from=builder /workspace/dist/node16 /
+COPY --from=builder /workspace/dist/node18 /
 # run installation
 RUN . $NVM_DIR/nvm.sh && node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 CMD ["source", "~/.cpprc"]

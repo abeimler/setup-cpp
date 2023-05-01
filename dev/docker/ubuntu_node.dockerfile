@@ -30,13 +30,9 @@ WORKDIR /workspace
 COPY . .
 RUN pnpm install
 
-#### Testing
-FROM builder AS tester
-RUN pnpm run test
-
 
 #### setup-cpp
-FROM ubuntu:22.04 AS setup-cpp
+FROM base AS setup-cpp
 # add setup-cpp.js
 COPY --from=builder /workspace/dist/node18 /
 # run installation

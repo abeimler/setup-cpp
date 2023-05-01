@@ -34,10 +34,6 @@ WORKDIR /workspace
 COPY . .
 RUN pnpm install
 
-#### Testing
-FROM builder AS tester
-RUN pnpm run test
-
 
 #### setup-cpp
 FROM base AS setup-cpp

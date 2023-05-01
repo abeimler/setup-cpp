@@ -3,7 +3,7 @@ FROM ubuntu:22.04 AS base
 RUN apt-get update -qq && apt-get install -y --no-install-recommends nodejs npm
 
 # install pnpm
-RUN npm install -g pnpm@6.35.1
+RUN npm install -g pnpm
 
 #### Building
 FROM base AS builder
@@ -18,7 +18,7 @@ FROM base AS setup-cpp
 # add setup-cpp.js
 COPY --from=builder /workspace/dist/node12 /
 # run installation
-RUN . $NVM_DIR/nvm.sh && node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
+RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]
 
